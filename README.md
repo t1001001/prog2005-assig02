@@ -1,7 +1,11 @@
 # Country Dashboard Service
 
-**Author:** Tobias Nguyen - tobiasng@stud.ntnu.no
+## Authors
+- Tobias Nguyen - tobiasng@stud.ntnu.no
+- Rayan Defoor - rayand@stud.ntnu.no
 
+
+## Service
 The Country Dashboard Service is a RESTful API that provides the client the ability to configure information dashboards that are dynamically populated when requested.
 
 - **RestCountries API:** https://restcountries.com
