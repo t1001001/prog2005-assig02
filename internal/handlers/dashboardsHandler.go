@@ -1,7 +1,11 @@
 package handlers
 
-import "net/http"
+import (
+	"net/http"
 
-func DashboardsHandler(w http.ResponseWriter, r *http.Request) {
+	"cloud.google.com/go/firestore"
+)
+
+func DashboardsHandler(w http.ResponseWriter, r *http.Request, client *firestore.Client) {
 
 }

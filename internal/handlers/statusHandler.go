@@ -1,7 +1,11 @@
 package handlers
 
-import "net/http"
+import (
+	"net/http"
 
-func StatusHandler(w http.ResponseWriter, r *http.Request) {
+	"cloud.google.com/go/firestore"
+)
+
+func StatusHandler(w http.ResponseWriter, r *http.Request, client *firestore.Client) {
 
 }
