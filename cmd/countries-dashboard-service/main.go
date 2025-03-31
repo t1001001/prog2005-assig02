@@ -51,7 +51,7 @@ func main() {
 	http.HandleFunc(c.ROOT+c.VERSION+c.REGISTRATIONS_PATH, app.wrapHandler(h.RegistrationsHandler))
 	http.HandleFunc(c.ROOT+c.VERSION+c.DASHBOARDS_PATH, app.wrapHandler(h.DashboardsHandler))
 	http.HandleFunc(c.ROOT+c.VERSION+c.NOTIFICATIONS_PATH, app.wrapHandler(h.NotificationsHandler))
-	http.HandleFunc(c.ROOT+c.VERSION+c.STATUS_PATH, app.wrapHandler(h.StatusHandler))
+	http.HandleFunc(c.ROOT+c.VERSION+c.STATUS_PATH, h.StatusHandler)
 
 	// Starting the server
 	log.Println("Starting server on port " + port)
