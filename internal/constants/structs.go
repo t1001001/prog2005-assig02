@@ -34,11 +34,11 @@ type Webhook struct {
 
 // Status represents the status of the services
 type Status struct {
-	CountriesAPI   int    `json:"countries_api" firestore:"countries_api"`
-	MeteoAPI       int    `json:"meteo_api" firestore:"meteo_api"`
-	CurrencyAPI    int    `json:"currency_api" firestore:"currency_api"`
-	NotificationDB int    `json:"notification_db" firestore:"notification_db"`
-	Webhooks       int    `json:"webhooks" firestore:"webhooks"`
-	Version        string `json:"version" firestore:"version"`
-	Uptime         int    `json:"uptime" firestore:"uptime"`
+	RestCountriesStatus string `json:"restcountries_status"`
+	OpenMeteoStatus     string `json:"openmeteo_status"`
+	CurrencyStatus      string `json:"currency_status"`
+	NotificationDB      string `json:"notification_db"`
+	Webhooks            int    `json:"webhooks"`
+	Version             string `json:"version"`
+	Uptime              int    `json:"uptime"`
 }
