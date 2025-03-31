@@ -1,0 +1,5 @@
+# Ignore the Service Account Key file
+servicekey.json
+
+# Ignore .env file as well (if you want to keep the .env file private)
+.env
