@@ -9,10 +9,10 @@ const (
 // Endpoint paths
 const (
 	DEFAULT_PATH       = "/"
-	REGISTRATIONS_PATH = "/registrations"
-	DASHBOARDS_PATH    = "/dashboards"
-	NOTIFICATIONS_PATH = "/notifications"
-	STATUS_PATH        = "/status"
+	REGISTRATIONS_PATH = "/registrations/"
+	DASHBOARDS_PATH    = "/dashboards/"
+	NOTIFICATIONS_PATH = "/notifications/"
+	STATUS_PATH        = "/status/"
 )
 
 // API endpoints
