@@ -63,25 +63,31 @@ func main() {
 
 // Initialize Firestore with credentials from .env file
 func initFirestore(ctx context.Context) (*firestore.Client, error) {
-	// Get the credentials path from the environment variable
 	credentialsPath := os.Getenv("GOOGLE_APPLICATION_CREDENTIALS")
 	if credentialsPath == "" {
 		log.Fatal("GOOGLE_APPLICATION_CREDENTIALS environment variable is not set")
 		return nil, fmt.Errorf("environment variable GOOGLE_APPLICATION_CREDENTIALS is required")
 	}
 
-	// Initialize Firebase app with credentials
 	sa := option.WithCredentialsFile(credentialsPath)
 	app, err := firebase.NewApp(ctx, nil, sa)
 	if err != nil {
 		return nil, err
 	}
 
-	// Create Firestore client
 	client, err := app.Firestore(ctx)
 	if err != nil {
 		return nil, err
 	}
+
+	// Test Firestore connection
+	_, err = client.Collections(ctx).GetAll()
+	if err != nil {
+		fmt.Println("Firestore NOT connected properly:", err)
+	} else {
+		fmt.Println("Firestore connected successfully")
+	}
+
 	return client, nil
 }
 
