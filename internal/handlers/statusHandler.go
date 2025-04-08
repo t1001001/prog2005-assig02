@@ -9,6 +9,8 @@ import (
 	"time"
 
 	"cloud.google.com/go/firestore"
+	"google.golang.org/api/iterator"
+
 	c "github.com/t1001001/prog-assig02/internal/constants"
 )
 
@@ -64,25 +66,26 @@ func StatusHandler(w http.ResponseWriter, r *http.Request, client *firestore.Cli
 		return
 	}
 
-	// Check Firestore connection
 	ctx := context.Background()
-	dbStatus := "500 Internal Server Error"                                // Assume failure initially
-	_, err := client.Collection("webhooks").Limit(1).Documents(ctx).Next() // Try fetching any document
-	if err == nil {
-		dbStatus = "200 OK" // Firestore connected successfully
+
+	// Check Firestore connection
+	dbStatus := "500 Internal Server Error"
+	_, err := client.Collection("webhooks").Limit(1).Documents(ctx).Next()
+	if err == nil || err == iterator.Done {
+		dbStatus = "200 OK"
 	} else {
-		log.Printf("Error fetching webhooks: %v", err)
+		log.Printf("Error checking Firestore connection: %v", err)
 	}
 
-	// Count the number of registered webhooks
+	// Count registered webhooks
 	webhookCount := 0
 	iter := client.Collection("webhooks").Documents(ctx)
 	for {
 		_, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
 		if err != nil {
-			if err.Error() == "iterator done" {
-				break
-			}
 			log.Printf("Error counting webhooks: %v", err)
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return
@@ -90,7 +93,7 @@ func StatusHandler(w http.ResponseWriter, r *http.Request, client *firestore.Cli
 		webhookCount++
 	}
 
-	// Check the status of external APIs
+	// Build status response
 	status := c.Status{
 		RestCountriesStatus: checkStatusHead(c.RESTCOUNTRIES_API_URL),
 		OpenMeteoStatus:     checkStatusHead(c.OPENMETEO_API_URL),
@@ -101,7 +104,7 @@ func StatusHandler(w http.ResponseWriter, r *http.Request, client *firestore.Cli
 		Uptime:              int(time.Since(startTime).Seconds()),
 	}
 
-	// Set the response content type and return the status
+	// Respond
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(status); err != nil {
 		log.Printf("Error encoding JSON: %v", err)
