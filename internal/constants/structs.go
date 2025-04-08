@@ -27,6 +27,7 @@ type Coordinates struct {
 
 // Webhook represents the event notifications
 type Webhook struct {
+	ID      string `json:"id" firestore:"id"`
 	URL     string `json:"url" firestore:"url"`
 	Country string `json:"country" firestore:"country"`
 	Event   string `json:"event" firestore:"event"`
