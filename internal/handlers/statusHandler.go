@@ -12,8 +12,8 @@ import (
 
 var startTime = time.Now()
 
-// send HEAD request to check availability
-func checkStatus(baseURL string) string {
+// send HEAD to the RestCountries and OpenMeteo API
+func checkStatusHead(baseURL string) string {
 	var statusURL string
 	if strings.Contains(baseURL, c.RESTCOUNTRIES_API_URL) {
 		statusURL = baseURL + "/all"
@@ -21,7 +21,25 @@ func checkStatus(baseURL string) string {
 	} else if strings.Contains(baseURL, c.OPENMETEO_API_URL) {
 		statusURL = baseURL + "/forecast"
 		log.Printf("Checking the Open-Meteo API: %s", statusURL)
-	} else if strings.Contains(baseURL, c.CURRENCY_API_URL) {
+	} else {
+		statusURL = baseURL
+	}
+
+	// Check if the API is available
+	resp, err := http.Head(statusURL)
+	if err != nil {
+		log.Printf("Error fetching %s: %v", statusURL, err)
+		return "Unavailable"
+	}
+	defer resp.Body.Close()
+
+	return resp.Status
+}
+
+// Send GET to the Currency API
+func checkStatusGet(baseURL string) string {
+	var statusURL string
+	if strings.Contains(baseURL, c.CURRENCY_API_URL) {
 		statusURL = baseURL + "/NOK"
 		log.Printf("Checking the Currency API: %s", statusURL)
 	} else {
@@ -29,7 +47,7 @@ func checkStatus(baseURL string) string {
 	}
 
 	// Check if the API is available
-	resp, err := http.Head(statusURL)
+	resp, err := http.Get(statusURL)
 	if err != nil {
 		log.Printf("Error fetching %s: %v", statusURL, err)
 		return "Unavailable"
@@ -48,9 +66,9 @@ func StatusHandler(w http.ResponseWriter, r *http.Request) {
 
 	// status response
 	status := c.Status{
-		RestCountriesStatus: checkStatus(c.RESTCOUNTRIES_API_URL),
-		OpenMeteoStatus:     checkStatus(c.OPENMETEO_API_URL),
-		CurrencyStatus:      checkStatus(c.CURRENCY_API_URL),
+		RestCountriesStatus: checkStatusHead(c.RESTCOUNTRIES_API_URL),
+		OpenMeteoStatus:     checkStatusHead(c.OPENMETEO_API_URL),
+		CurrencyStatus:      checkStatusGet(c.CURRENCY_API_URL),
 		NotificationDB:      "",
 		Webhooks:            0,
 		Version:             c.VERSION,
