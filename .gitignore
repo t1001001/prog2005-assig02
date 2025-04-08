@@ -6,3 +6,6 @@ servicekey.json
 
 # Ignore VS Code configs
 .vscode
+
+# debug file for notifications
+internal/handlers/debug.go
