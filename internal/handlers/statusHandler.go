@@ -100,7 +100,7 @@ func StatusHandler(w http.ResponseWriter, r *http.Request, client *firestore.Cli
 		CurrencyStatus:      checkStatusGet(c.CURRENCY_API_URL),
 		NotificationDB:      dbStatus,
 		Webhooks:            webhookCount,
-		Version:             c.VERSION,
+		Version:             strings.ToUpper(strings.Replace(c.VERSION, "/", "", -1)),
 		Uptime:              int(time.Since(startTime).Seconds()),
 	}
 
