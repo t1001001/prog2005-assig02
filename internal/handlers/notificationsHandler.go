@@ -104,8 +104,8 @@ func handleGetWebhook(w http.ResponseWriter, r *http.Request, client *firestore.
 
 func extractWebhookID(r *http.Request) string {
 	parts := strings.Split(strings.Trim(r.URL.Path, "/"), "/")
-	if len(parts) == 5 {
-		return parts[4]
+	if len(parts) >= 4 && parts[2] == "notifications" {
+		return parts[3]
 	}
 	return ""
 }
