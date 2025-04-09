@@ -31,6 +31,7 @@ type Webhook struct {
 	URL     string `json:"url" firestore:"url"`
 	Country string `json:"country" firestore:"country"`
 	Event   string `json:"event" firestore:"event"`
+	Time    string `json:"time" firestore:"time"`
 }
 
 // Status represents the status of the services

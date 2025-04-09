@@ -1,10 +1,13 @@
 package handlers
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
+	"log"
 	"net/http"
 	"strings"
+	"time"
 
 	"cloud.google.com/go/firestore"
 	"github.com/google/uuid"
@@ -108,4 +111,47 @@ func extractWebhookID(r *http.Request) string {
 		return parts[3]
 	}
 	return ""
+}
+
+// sendWebhookNotification sends an HTTP POST to a registered webhook
+func sendWebhookNotification(webhook c.Webhook, countryCode string) {
+	payload := c.Webhook{
+		ID:      webhook.ID,
+		Country: countryCode,
+		Event:   "INVOKE",
+		Time:    time.Now().Format("20060102 15:04"), // Format: 20240223 06:23
+	}
+
+	data, err := json.Marshal(payload)
+	if err != nil {
+		log.Printf("Failed to marshal webhook payload for ID %s: %v", webhook.ID, err)
+		return
+	}
+
+	resp, err := http.Post(webhook.URL, "application/json", bytes.NewBuffer(data))
+	if err != nil {
+		log.Printf("Failed to send webhook ID %s to %s: %v", webhook.ID, webhook.URL, err)
+		return
+	}
+	defer resp.Body.Close()
+
+	log.Printf("Webhook %s triggered with status: %s", webhook.ID, resp.Status)
+}
+
+// TriggerWebhooks sends notifications to all registered webhooks
+func TriggerWebhooks(client *firestore.Client, countryCode string) {
+	ctx := context.Background()
+	iter := client.Collection("webhooks").Documents(ctx)
+
+	for {
+		doc, err := iter.Next()
+		if err != nil {
+			break
+		}
+
+		var webhook c.Webhook
+		if err := doc.DataTo(&webhook); err == nil {
+			go sendWebhookNotification(webhook, countryCode) // async to avoid blocking
+		}
+	}
 }
