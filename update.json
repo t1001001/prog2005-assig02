@@ -1,14 +1,14 @@
 {
-    "country": "Norway",
-    "isoCode": "NO",
+    "country": "France",
+    "isoCode": "FR",
     "features": {
-      "temperature": false,
+      "temperature": true,
       "precipitation": true,
       "capital": true,
       "coordinates": true,
       "population": true,
       "area": true,
-      "targetCurrencies": ["JPY"]
+      "targetCurrencies": ["NOK"]
     }
   }
   
