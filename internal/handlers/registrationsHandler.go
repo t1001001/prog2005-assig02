@@ -6,27 +6,13 @@ import (
 	"log"
 	"net/http"
 	"strings"
-	"time"
 
 	"cloud.google.com/go/firestore"
 	"github.com/google/uuid"
 
 	c "github.com/t1001001/prog-assig02/internal/constants"
+	h "github.com/t1001001/prog-assig02/internal/helpers"
 )
-
-// getCurrentTimestamp returns the current time formatted as "YYYYMMDD HH:MM"
-func getCurrentTimestamp() string {
-	return time.Now().Format("20060102 15:04")
-}
-
-// RegistrationResponse formats the JSON response in the correct field order
-type RegistrationResponse struct {
-	ID         string     `json:"id"`
-	Country    string     `json:"country"`
-	ISOCode    string     `json:"isoCode"`
-	Features   c.Features `json:"features"`
-	LastChange string     `json:"lastChange"`
-}
 
 // respondWithJSON sends a pretty-formatted JSON response
 func respondWithJSON(w http.ResponseWriter, status int, payload interface{}) {
@@ -77,7 +63,7 @@ func handlePostRegistration(w http.ResponseWriter, r *http.Request, ctx context.
 		return
 	}
 
-	config.LastRetrieval = getCurrentTimestamp()
+	config.LastRetrieval = h.GetCurrentTimestamp()
 	id := uuid.New().String()
 
 	if _, err := client.Collection("registrations").Doc(id).Set(ctx, config); err != nil {
@@ -105,7 +91,7 @@ func handleGetRegistration(w http.ResponseWriter, r *http.Request, ctx context.C
 			http.Error(w, "Error parsing configuration", http.StatusInternalServerError)
 			return
 		}
-		response := RegistrationResponse{
+		response := c.RegistrationResponse{
 			ID:         doc.Ref.ID,
 			Country:    config.Country,
 			ISOCode:    config.ISOCode,
@@ -119,11 +105,11 @@ func handleGetRegistration(w http.ResponseWriter, r *http.Request, ctx context.C
 			http.Error(w, "Failed to fetch configurations", http.StatusInternalServerError)
 			return
 		}
-		var configs []RegistrationResponse
+		var configs []c.RegistrationResponse
 		for _, doc := range docs {
 			var config c.Country
 			doc.DataTo(&config)
-			entry := RegistrationResponse{
+			entry := c.RegistrationResponse{
 				ID:         doc.Ref.ID,
 				Country:    config.Country,
 				ISOCode:    config.ISOCode,
@@ -149,7 +135,7 @@ func handlePutRegistration(w http.ResponseWriter, r *http.Request, ctx context.C
 		return
 	}
 
-	config.LastRetrieval = getCurrentTimestamp()
+	config.LastRetrieval = h.GetCurrentTimestamp()
 
 	if _, err := client.Collection("registrations").Doc(id).Set(ctx, config); err != nil {
 		http.Error(w, "Failed to update configuration", http.StatusInternalServerError)

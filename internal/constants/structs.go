@@ -43,3 +43,31 @@ type Status struct {
 	Version             string `json:"version"`
 	Uptime              int    `json:"uptime"`
 }
+
+// RegistrationResponse represents the response format for a registration
+type RegistrationResponse struct {
+	ID         string   `json:"id"`
+	Country    string   `json:"country"`
+	ISOCode    string   `json:"isoCode"`
+	Features   Features `json:"features"`
+	LastChange string   `json:"lastChange"`
+}
+
+// DashboardResponse is returned by GET /dashboards/{id}
+type DashboardResponse struct {
+	Country       string           `json:"country"`
+	ISOCode       string           `json:"isoCode"`
+	Features      EnrichedFeatures `json:"features"`
+	LastRetrieval string           `json:"lastRetrieval"`
+}
+
+// EnrichedFeatures contains fetched external data
+type EnrichedFeatures struct {
+	Temperature      float64            `json:"temperature,omitempty"`
+	Precipitation    float64            `json:"precipitation,omitempty"`
+	Capital          string             `json:"capital,omitempty"`
+	Coordinates      Coordinates        `json:"coordinates,omitempty"`
+	Population       int                `json:"population,omitempty"`
+	Area             float64            `json:"area,omitempty"`
+	TargetCurrencies map[string]float64 `json:"targetCurrencies,omitempty"`
+}
