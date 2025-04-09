@@ -1,14 +1,13 @@
 {
-    "country": "Norway",
-    "isoCode": "NO",
-    "features": {
-      "temperature": true,
-      "precipitation": true,
-      "capital": true,
-      "coordinates": true,
-      "population": true,
-      "area": true,
-      "targetCurrencies": ["EUR", "USD", "SEK"]
-    }
+  "country": "Singapore",
+  "isoCode": "SG",
+  "features": {
+    "temperature": true,
+    "precipitation": true,
+    "capital": true,
+    "coordinates": true,
+    "population": true,
+    "area": true,
+    "targetCurrencies": ["USD", "EUR", "MYR"]
   }
-  
+}
