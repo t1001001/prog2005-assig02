@@ -10,13 +10,13 @@ type Country struct {
 
 // Features represents the "Features" field used in the "Country" struct
 type Features struct {
-	Temperature      float64            `json:"temperature" firestore:"temperature"`
-	Precipitation    float64            `json:"precipitation" firestore:"precipitation"`
-	Capital          string             `json:"capital" firestore:"capital"`
-	Coordinates      Coordinates        `json:"coordinates" firestore:"coordinates"`
-	Population       int                `json:"population" firestore:"population"`
-	Area             float64            `json:"area" firestore:"area"`
-	TargetCurrencies map[string]float64 `json:"targetCurrencies" firestore:"targetCurrencies"`
+	Temperature      bool     `json:"temperature" firestore:"temperature"`
+	Precipitation    bool     `json:"precipitation" firestore:"precipitation"`
+	Capital          bool     `json:"capital" firestore:"capital"`
+	Coordinates      bool     `json:"coordinates" firestore:"coordinates"`
+	Population       bool     `json:"population" firestore:"population"`
+	Area             bool     `json:"area" firestore:"area"`
+	TargetCurrencies []string `json:"targetCurrencies" firestore:"targetCurrencies"`
 }
 
 // Coordinates represents the "Coordinates" field used in the "Features" struct

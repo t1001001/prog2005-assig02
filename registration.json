@@ -1,0 +1,14 @@
+{
+    "country": "Norway",
+    "isoCode": "NO",
+    "features": {
+      "temperature": true,
+      "precipitation": true,
+      "capital": true,
+      "coordinates": true,
+      "population": true,
+      "area": true,
+      "targetCurrencies": ["EUR", "USD", "SEK"]
+    }
+  }
+  
