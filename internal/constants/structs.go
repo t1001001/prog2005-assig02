@@ -65,7 +65,7 @@ type DashboardResponse struct {
 // EnrichedFeatures contains fetched external data
 type EnrichedFeatures struct {
 	Temperature      float64            `json:"temperature,omitempty"`
-	Precipitation    float64            `json:"precipitation,omitempty"`
+	Precipitation    float64            `json:"precipitation"`
 	Capital          string             `json:"capital,omitempty"`
 	Coordinates      Coordinates        `json:"coordinates,omitempty"`
 	Population       int                `json:"population,omitempty"`

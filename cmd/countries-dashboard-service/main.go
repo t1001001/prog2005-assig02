@@ -53,6 +53,9 @@ func main() {
 	http.HandleFunc(c.ROOT+c.VERSION+c.NOTIFICATIONS_PATH, app.wrapHandler(h.NotificationsHandler))
 	http.HandleFunc(c.ROOT+c.VERSION+c.STATUS_PATH, app.wrapHandler(h.StatusHandler))
 
+	// connecting to the static files
+	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("internal/assets/images"))))
+
 	// Starting the server
 	log.Println("Starting server on port " + port)
 	err = http.ListenAndServe(":"+port, nil)
