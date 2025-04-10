@@ -71,6 +71,8 @@ func handlePostRegistration(w http.ResponseWriter, r *http.Request, ctx context.
 		return
 	}
 
+	go TriggerWebhooks(client, config.ISOCode, c.EVENT_REGISTER)
+
 	log.Printf("[POST] Registered config for: %s (%s)", config.Country, config.ISOCode)
 	respondWithJSON(w, http.StatusOK, map[string]string{
 		"id":         id,
@@ -91,6 +93,10 @@ func handleGetRegistration(w http.ResponseWriter, r *http.Request, ctx context.C
 			http.Error(w, "Error parsing configuration", http.StatusInternalServerError)
 			return
 		}
+
+		// Trigger the webhook for the INVOKE event
+		go TriggerWebhooks(client, config.ISOCode, c.EVENT_INVOKE)
+
 		response := c.RegistrationResponse{
 			ID:         doc.Ref.ID,
 			Country:    config.Country,
@@ -142,6 +148,8 @@ func handlePutRegistration(w http.ResponseWriter, r *http.Request, ctx context.C
 		return
 	}
 
+	go TriggerWebhooks(client, config.ISOCode, c.EVENT_CHANGE)
+
 	log.Printf("[PUT] Updated config for ID: %s", id)
 	w.WriteHeader(http.StatusNoContent)
 }
@@ -153,10 +161,24 @@ func handleDeleteRegistration(w http.ResponseWriter, r *http.Request, ctx contex
 		return
 	}
 
-	if _, err := client.Collection("registrations").Doc(id).Delete(ctx); err != nil {
+	doc, err := client.Collection("registrations").Doc(id).Get(ctx)
+	if err != nil {
+		http.Error(w, "Configuration not found", http.StatusNotFound)
+		return
+	}
+
+	var config c.Country
+	if err := doc.DataTo(&config); err != nil {
+		http.Error(w, "Failed to parse configuration", http.StatusInternalServerError)
+		return
+	}
+
+	if _, err := doc.Ref.Delete(ctx); err != nil {
 		http.Error(w, "Failed to delete configuration", http.StatusInternalServerError)
 		return
 	}
+
+	go TriggerWebhooks(client, config.ISOCode, c.EVENT_DELETE)
 
 	log.Printf("[DELETE] Deleted config for ID: %s", id)
 	w.WriteHeader(http.StatusNoContent)

@@ -21,3 +21,11 @@ const (
 	OPENMETEO_API_URL     = "https://api.open-meteo.com/v1"
 	CURRENCY_API_URL      = "http://129.241.150.113:9090/currency"
 )
+
+// Webhook Event Types
+const (
+	EVENT_REGISTER = "REGISTER"
+	EVENT_CHANGE   = "CHANGE"
+	EVENT_DELETE   = "DELETE"
+	EVENT_INVOKE   = "INVOKE"
+)
