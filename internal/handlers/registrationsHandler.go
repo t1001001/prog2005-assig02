@@ -83,6 +83,7 @@ func handlePostRegistration(w http.ResponseWriter, r *http.Request, ctx context.
 // GET: Retrieve one or all registrations
 func handleGetRegistration(w http.ResponseWriter, r *http.Request, ctx context.Context, client *firestore.Client, id string) {
 	if id != "" {
+		// Retrieve single registration
 		doc, err := client.Collection("registrations").Doc(id).Get(ctx)
 		if err != nil {
 			http.Error(w, "Configuration not found", http.StatusNotFound)
@@ -94,9 +95,10 @@ func handleGetRegistration(w http.ResponseWriter, r *http.Request, ctx context.C
 			return
 		}
 
-		// Trigger the webhook for the INVOKE event
+		// Trigger the webhook for the INVOKE event for the specific country
 		go TriggerWebhooks(client, config.ISOCode, c.EVENT_INVOKE)
 
+		// Prepare the response
 		response := c.RegistrationResponse{
 			ID:         doc.Ref.ID,
 			Country:    config.Country,
@@ -106,6 +108,7 @@ func handleGetRegistration(w http.ResponseWriter, r *http.Request, ctx context.C
 		}
 		respondWithJSON(w, http.StatusOK, response)
 	} else {
+		// Retrieve all registrations
 		docs, err := client.Collection("registrations").Documents(ctx).GetAll()
 		if err != nil {
 			http.Error(w, "Failed to fetch configurations", http.StatusInternalServerError)
@@ -115,6 +118,11 @@ func handleGetRegistration(w http.ResponseWriter, r *http.Request, ctx context.C
 		for _, doc := range docs {
 			var config c.Country
 			doc.DataTo(&config)
+
+			// Trigger the webhook for the INVOKE event for each country
+			go TriggerWebhooks(client, config.ISOCode, c.EVENT_INVOKE)
+
+			// Prepare each registration for response
 			entry := c.RegistrationResponse{
 				ID:         doc.Ref.ID,
 				Country:    config.Country,
@@ -124,6 +132,8 @@ func handleGetRegistration(w http.ResponseWriter, r *http.Request, ctx context.C
 			}
 			configs = append(configs, entry)
 		}
+
+		// Respond with the list of registrations
 		respondWithJSON(w, http.StatusOK, configs)
 	}
 }
