@@ -40,15 +40,6 @@ go run cmd/country-dashboard-service/main.go
 
 ---
 
-## Specification
-
-The implementation of the service API should follow this specification, i.e., the schemas (or syntax) of request and response messages, alongside method and status codes should correspond to the ones provided below. Requests and responses are expressed using examples to illustrate the structure in populated messages. Where you make individual decisions (e.g., for aspects not explicitly described), ensure to document those in the documentation and code base.
-
-**Note:** Please post an issue if the specification is unclear as soon as possible (don’t wait too long) – so we can clarify and refine it if needed.  
-Some of the tasks mentioned below are marked as *Advanced Tasks*. These are optional, and not a requirement to pass the assignment, but will of course contribute positively to your grade.
-
----
-
 ## Endpoint `/dashboard/v1/registrations/` — Dashboard Configuration
 
 ### Register new dashboard configuration
@@ -347,33 +338,6 @@ Returns the availability and status of upstream services, number of registered w
 }
 ```
 
-You may extend this response to include additional useful metrics.
-
 ---
 
-## Additional Requirements
-
-- All endpoints must be covered by unit tests using Go’s `testing` and `httptest` packages.
-- External services (APIs) must be mocked.
-- Firebase must be used as the real storage backend (not mocked).
-- Maximize code testability and coverage.
-- Cache external API responses in Firestore to limit requests.
-- (Advanced) Implement purging of outdated cache entries.
-
----
-
-## Deployment
-
-The service must be deployed on OpenStack using Docker.  
-Provide the URL of your deployed service and your repository when submitting the assignment.
-
----
-
-## Notes
-
-- Use standard Go packages and Firestore only.
-- Avoid unnecessary external libraries.
-- Raise issues early for clarification.
-- Use helper/debug endpoints if needed.
-- Document all key design decisions.
 
