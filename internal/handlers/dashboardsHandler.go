@@ -185,6 +185,6 @@ func DashboardsHandler(w http.ResponseWriter, r *http.Request, client *firestore
 		w.Write(out)
 
 		// Trigger Webhook
-		go TriggerWebhooks(client, config.ISOCode, c.EVENT_REGISTER)
+		go TriggerWebhooks(client, config.ISOCode, c.EVENT_INVOKE)
 	}
 }
