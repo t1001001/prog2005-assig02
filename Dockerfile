@@ -15,8 +15,8 @@ COPY . .
 # Copy the Go executable into the container
 COPY cmd/countries-dashboard-service/main .
 
-# Copy your Firestore service account key file into the container (optional if needed)
-# COPY path/to/your/service_account_key.json /app/service_account_key.json
+# Define exposed port
+EXPOSE 8080
 
 # Make the Go executable the entry point
 CMD ["./main"]
