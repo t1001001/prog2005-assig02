@@ -14,20 +14,27 @@ The Country Dashboard Service is a RESTful API that provides the client the abil
 *Please note that these URLs are the actual API endpoints.*  
 *This Assignment strictly invokes a self-hosted version of the RestCountries API and Exchange Rate API endpoints.*
 
-## Dependencies
+## How to use the service?
+Please visit `http://10.212.171.150:8080/dashboard/v1/` to use the service.
+
+*Make sure that you are connected to the NTNU VPN!*
+
+If it is not possible to use the service via the URL, run the `main.go` file to run it locally:
+
+```bash
+go run cmd/country-dashboard-service/main.go
+```
+
+But if the service is run locally, please follow the instructions below (Dependencies).
+
+## Dependencies (locally run service)
 Please install the 1.24.1 version of Go.  
 To install it, please run the following commands in your terminal:
 
 ```bash
 go install golang.org/dl/go1.24.1@latest
 go1.24.1 download
-```
-
-## How to use the service?
-To run the service, simply run the `main.go` file:
-
-```bash
-go run cmd/country-dashboard-service/main.go
+go mod download
 ```
 
 ## Available Endpoints
@@ -80,6 +87,11 @@ go run cmd/country-dashboard-service/main.go
 **Method:** GET  
 **Path:** `/dashboard/v1/registrations/{id}`
 
+**Request Example:**
+```
+/dashboard/v1/registrations/516dba7f015f2a68
+```
+
 **Response Example:**
 ```json
 {
@@ -105,6 +117,11 @@ go run cmd/country-dashboard-service/main.go
 
 **Method:** GET  
 **Path:** `/dashboard/v1/registrations/`
+
+**Request Example:**
+```
+/dashboard/v1/registrations/
+```
 
 **Response Example:**
 ```json
@@ -142,11 +159,9 @@ go run cmd/country-dashboard-service/main.go
 ]
 ```
 
-> Advanced Task: Implement the HEAD method functionality (only return the header, not the body).
-
 ---
 
-### Replace a specific registered dashboard configuration
+### Change a specific registered dashboard configuration
 
 **Method:** PUT  
 **Path:** `/dashboard/v1/registrations/{id}`  
@@ -169,7 +184,7 @@ go run cmd/country-dashboard-service/main.go
 }
 ```
 
-**Response:** Empty body with appropriate HTTP status code.
+**Response:** *a 204 is returned but the configuration is changed*
 
 ---
 
@@ -178,7 +193,12 @@ go run cmd/country-dashboard-service/main.go
 **Method:** DELETE  
 **Path:** `/dashboard/v1/registrations/{id}`
 
-**Response:** Empty body with appropriate HTTP status code.
+**Request Example:**
+```
+/dashboard/v1/registrations/516dba7f015f2a68
+```
+
+**Response Example:** *a 204 is returned*
 
 ---
 
@@ -189,6 +209,11 @@ This endpoint can be used to retrieve a populated dashboard using the registered
 **Method:** GET  
 **Path:** `/dashboard/v1/dashboards/{id}`  
 **Content-Type:** `application/json`
+
+**Request Example:**
+```
+dashboard/v1/516dba7f015f2a68
+```
 
 **Response Example:**
 ```json
@@ -214,8 +239,6 @@ This endpoint can be used to retrieve a populated dashboard using the registered
   "lastRetrieval": "20250229 18:15"
 }
 ```
-
-> Note: Only one dashboard can be retrieved at a time to avoid overloading external APIs.
 
 ---
 
@@ -252,7 +275,7 @@ This endpoint manages webhook registrations triggered by events like configurati
 **Method:** DELETE  
 **Path:** `/dashboard/v1/notifications/{id}`
 
-**Response:** Empty body with appropriate status code.
+**Response:** *a 204 is returned*
 
 ---
 
@@ -260,6 +283,11 @@ This endpoint manages webhook registrations triggered by events like configurati
 
 **Method:** GET  
 **Path:** `/dashboard/v1/notifications/{id}`
+
+**Request Example:**
+```
+dashboard/v1/notifications/OIdksUDwveiwe
+```
 
 **Response Example:**
 ```json
@@ -277,6 +305,11 @@ This endpoint manages webhook registrations triggered by events like configurati
 
 **Method:** GET  
 **Path:** `/dashboard/v1/notifications/`
+
+**Request Example:**
+```
+/dashboard/v1/notifications/
+```
 
 **Response Example:**
 ```json
@@ -340,4 +373,10 @@ Returns the availability and status of upstream services, number of registered w
 
 ---
 
+## Workflow Example (Create)
+1. Register a webhook (POST request @ *dashboards/v1/notifications*)
 
+2. Register a configuration (POST request @ *dashboards/v1/registrations*)
+
+3. Now, a webhook should be invoked at your webhook URL (like https://webhook.site) with the event you have registered on your webhook.
+Any modifications to the configuration will result in more invoked webhooks.
