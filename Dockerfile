@@ -1,25 +1,22 @@
-# Use a minimal base image for Go
-FROM golang:1.24.1 AS builder
+# Use a debian base image (which includes glibc)
+FROM debian:latest
 
+# Install necessary dependencies including libc6 and CA certificates
+RUN apt-get update && apt-get install -y \
+  libc6 \
+  ca-certificates
+
+# Set a working directory inside the container
 WORKDIR /app
 
-# Copy go mod files and download dependencies
-COPY go.mod go.sum ./
-RUN go mod download
-
-# Copy the source code
+# Copy everything
 COPY . .
 
-# Build the Go app
-RUN CGO_ENABLED=0 GOOS=linux go build -o server ./cmd/countries-dashboard-service/main.go
+# Copy the Go executable into the container
+COPY cmd/countries-dashboard-service/main .
 
-# --- Use a smaller image for the final binary ---
-FROM alpine:latest
+# Copy your Firestore service account key file into the container (optional if needed)
+# COPY path/to/your/service_account_key.json /app/service_account_key.json
 
-WORKDIR /root/
-
-# Copy binary from builder
-COPY --from=builder /app/server .
-
-# Set the default command
-CMD ["./server"]
+# Make the Go executable the entry point
+CMD ["./main"]

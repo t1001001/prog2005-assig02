@@ -9,3 +9,6 @@ servicekey.json
 
 # debug file for notifications
 internal/handlers/debug.go
+
+# executable
+cmd/countries-dashboard-service/main
